@@ -14,7 +14,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id='dynamic_json_1000_tasks_in_memory',
+    dag_id='dynamic_json_500000_tasks_in_memory',
     default_args=default_args,
     description='Generate JSON and run 1000 tasks in memory',
     schedule_interval=None,
@@ -25,7 +25,7 @@ with DAG(
     @task
     def generate_data():
         # Generate 1000 in-memory dicts
-        return [{"task_id": f"task_{i}", "value": f"value_{i}"} for i in range(1000)]
+        return [{"task_id": f"task_{i}", "value": f"value_{i}"} for i in range(500000)]
 
     @task
     def run_subtask(task_data):
