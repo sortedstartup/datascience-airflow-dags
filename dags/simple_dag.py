@@ -18,7 +18,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id='simple_test_dag',
+    dag_id='simple_test_dag_deep',
     default_args=default_args,
     schedule_interval='@daily',
     catchup=False,
