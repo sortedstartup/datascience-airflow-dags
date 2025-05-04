@@ -29,7 +29,6 @@ with DAG(
 
     @task
     def run_subtask(task_data):
-    //    time.sleep(random.randint(1, 2))
         print(f"Running {task_data['task_id']} with {task_data['value']}")
 
     # Generate → Map to Subtasks
