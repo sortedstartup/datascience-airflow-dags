@@ -12,7 +12,7 @@ def wait():
 
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime(2023, 1, 1),
+    'start_date': datetime(2025, 3, 3),
     'retries': 1,
     'retry_delay': timedelta(minutes=1),
 }
