@@ -37,4 +37,4 @@ def hes_mdm_new_pipeline():
     # Chain the tasks
     process_batch_bulk.expand(meter_ids=generate_batches())
 
-dag = hes_mdm_pipeline()
+dag = hes_mdm_new_pipeline()
