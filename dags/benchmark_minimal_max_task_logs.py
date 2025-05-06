@@ -17,7 +17,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id='benchmark_minimal_logs',
+    dag_id='benchmark_minimal_logs_change_max_task',
     default_args=default_args,
     schedule_interval=None,
     catchup=False,
