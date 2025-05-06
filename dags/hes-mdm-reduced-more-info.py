@@ -13,18 +13,17 @@ MDM_URL = "http://mdm-mock.mock/api/mdm/readings"
     schedule_interval=None,
     start_date=days_ago(1),
     catchup=False,
-    params={
-        "total_meters": 300000,
-        "batch_size": 150
-    },
     tags=["hes", "mdm"],
 )
 def hes_mdm_reduced_batches_more_info():
 
     @task
     def generate_batches():
-        total_meters = int(params.get("total_meters", 300000))
-        batch_size = int(params.get("batch_size", 150))
+        context = get_current_context()
+        conf = context["dag_run"].conf or {}
+
+        total_meters = int(conf.get("total_meters", 300000))
+        batch_size = int(conf.get("batch_size", 150))
 
         meter_ids = [f"MTR{str(i).zfill(6)}" for i in range(1, total_meters + 1)]
         batches = [meter_ids[i:i + batch_size] for i in range(0, len(meter_ids), batch_size)]
