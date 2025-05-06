@@ -59,4 +59,4 @@ def hes_mdm_reduced_batches_more_info():
     worker_hosts = process_batch_bulk.expand(meter_ids=batches)
     summarize_worker_usage(worker_hosts)
 
-dag = hes_mdm_reduced_batches_3()
+dag = hes_mdm_reduced_batches_more_info()
