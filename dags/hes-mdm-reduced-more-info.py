@@ -19,7 +19,7 @@ MDM_URL = "http://mdm-mock.mock/api/mdm/readings"
     },
     tags=["hes", "mdm"],
 )
-def hes_mdm_reduced_batches_3():
+def hes_mdm_reduced_batches_more_info():
 
     @task
     def generate_batches():
