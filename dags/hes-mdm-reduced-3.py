@@ -4,7 +4,7 @@ import requests
 import logging
 
 HES_URL = "http://hes-mock.mock/api/readings/bulk"
-MDM_URL = "http://mdm-mock.mock/api/mdm/readings/bulk"
+MDM_URL = "http://mdm-mock.mock/api/mdm/readings"
 
 @dag(
     schedule_interval=None,
@@ -12,7 +12,7 @@ MDM_URL = "http://mdm-mock.mock/api/mdm/readings/bulk"
     catchup=False,
     tags=["hes", "mdm"],
 )
-def hes_mdm_reduced_batches_2():
+def hes_mdm_reduced_batches_3():
 
     @task
     def generate_batches():
@@ -39,4 +39,4 @@ def hes_mdm_reduced_batches_2():
 
     process_batch_bulk.expand(meter_ids=generate_batches())
 
-dag = hes_mdm_reduced_batches_2()
+dag = hes_mdm_reduced_batches_3()
