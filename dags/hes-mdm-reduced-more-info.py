@@ -15,15 +15,12 @@ MDM_URL = "http://mdm-mock.mock/api/mdm/readings"
     catchup=False,
     tags=["hes", "mdm"],
 )
-def hes_mdm_reduced_batches_more_info():
+def hes_mdm_reduced_batches_hardcoded():
 
     @task
     def generate_batches():
-        context = get_current_context()
-        conf = context["dag_run"].conf or {}
-
-        total_meters = int(conf.get("total_meters", 300000))
-        batch_size = int(conf.get("batch_size", 150))
+        total_meters = 300000
+        batch_size = 300
 
         meter_ids = [f"MTR{str(i).zfill(6)}" for i in range(1, total_meters + 1)]
         batches = [meter_ids[i:i + batch_size] for i in range(0, len(meter_ids), batch_size)]
@@ -35,7 +32,6 @@ def hes_mdm_reduced_batches_more_info():
         hostname = socket.gethostname()
         logging.info(f"[{hostname}] Processing batch with {len(meter_ids)} meters. First meter: {meter_ids[0]}")
 
-        # Simulated API requests
         hes_resp = requests.post(HES_URL, json={"meterIds": meter_ids}, timeout=30)
         hes_resp.raise_for_status()
         bulk_data = hes_resp.json().get("bulkReadings", [])
@@ -58,4 +54,4 @@ def hes_mdm_reduced_batches_more_info():
     worker_hosts = process_batch_bulk.expand(meter_ids=batches)
     summarize_worker_usage(worker_hosts)
 
-dag = hes_mdm_reduced_batches_more_info()
+dag = hes_mdm_reduced_batches_hardcoded()
