@@ -19,7 +19,7 @@ def process_batch_bulk(meter_ids, batch_id):
     logging.info(f"[Batch {batch_id}] Sent {len(payload)} records to MDM.")
 
 @dag(schedule_interval=None, start_date=days_ago(1), catchup=False, tags=["hes", "mdm"])
-def hes_mdm_loop_dag():
+def hes_mdm_reduced_batches_3_spark_v1():
 
     meter_ids = [f"MTR{str(i).zfill(6)}" for i in range(1, 300001)]
     batches = [meter_ids[i:i + 300] for i in range(0, len(meter_ids), 300)]
@@ -27,7 +27,7 @@ def hes_mdm_loop_dag():
     for idx, batch in enumerate(batches[:5]):  # ⚠️ Limit for safety
         spark = SparkKubernetesOperator(
             task_id=f"spark_job_batch_{idx}",
-            namespace="spark-apps",
+            namespace="default",
             application_file="spark-pi.yaml",  # Customize per batch if needed
             kubernetes_conn_id="kubernetes_default",
             do_xcom_push=False,
@@ -36,4 +36,4 @@ def hes_mdm_loop_dag():
         post_spark = process_batch_bulk.override(task_id=f"process_batch_{idx}")(batch, idx)
         spark >> post_spark
 
-dag = hes_mdm_loop_dag()
+dag = hes_mdm_reduced_batches_3_spark_v1()
