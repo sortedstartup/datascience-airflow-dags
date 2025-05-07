@@ -13,7 +13,7 @@ MDM_URL = "http://mdm-mock.mock/api/mdm/readings"
     catchup=False,
     tags=["hes", "mdm"],
 )
-def hes_mdm_reduced_batches_3_spark():
+def hes_mdm_reduced_batches_3_spark_v1():
 
     @task
     def generate_batches():
@@ -52,4 +52,4 @@ def hes_mdm_reduced_batches_3_spark():
         spark_task = create_spark_task(idx)
         spark_task >> process_batch_bulk.override(task_id=f'process_batch_{idx}')(batch)
 
-dag = hes_mdm_reduced_batches_3_spark()
+dag = hes_mdm_reduced_batches_3_spark_v1()
