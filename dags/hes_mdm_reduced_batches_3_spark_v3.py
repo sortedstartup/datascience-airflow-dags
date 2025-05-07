@@ -19,21 +19,27 @@ def process_batch_bulk(meter_ids, batch_id):
     logging.info(f"[Batch {batch_id}] Sent {len(payload)} records to MDM.")
 
 @dag(schedule_interval=None, start_date=days_ago(1), catchup=False, tags=["hes", "mdm"])
-def hes_mdm_reduced_batches_3_spark_v2():
+def hes_mdm_reduced_batches_3_spark_v3():
+    pass  # task definitions will be attached outside
 
-    meter_ids = [f"MTR{str(i).zfill(6)}" for i in range(1, 300001)]
-    batches = [meter_ids[i:i + 300] for i in range(0, len(meter_ids), 300)]
+dag = hes_mdm_reduced_batches_3_spark_v3()
 
-    for idx, batch in enumerate(batches[:5]):  # ⚠️ Limit for safety
-        spark = SparkKubernetesOperator(
-            task_id=f"spark_job_batch_{idx}",
-            namespace="spark-apps",
-            application_file="spark-pi.yaml",  # Customize per batch if needed
-            kubernetes_conn_id="kubernetes_default",
-            do_xcom_push=False,
-        )
+# Define batch data outside DAG body
+meter_ids = [f"MTR{str(i).zfill(6)}" for i in range(1, 300001)]
+batches = [meter_ids[i:i + 300] for i in range(0, len(meter_ids), 300)]
 
-        post_spark = process_batch_bulk.override(task_id=f"process_batch_{idx}")(batch, idx)
-        spark >> post_spark
+# Add fixed number of batch tasks
+for idx, batch in enumerate(batches[:5]):  # limit to 5 for now
+    spark = SparkKubernetesOperator(
+        task_id=f"spark_job_batch_{idx}",
+        namespace="default",
+        application_file="spark-pi.yaml",  # optionally templated per batch
+        kubernetes_conn_id="kubernetes_default",
+        do_xcom_push=False,
+        dag=dag,
+    )
 
-dag = hes_mdm_reduced_batches_3_spark_v2()
+    post_spark = process_batch_bulk.override(task_id=f"process_batch_{idx}").expand_kwargs(
+        [{"meter_ids": batch, "batch_id": idx}]
+    )
+    spark >> post_spark
