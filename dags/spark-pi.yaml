@@ -16,14 +16,17 @@ spec:
   restartPolicy:
     type: Never
   driver:
-    cores: 1
+    coreRequest: "0.2"
+    coreLimit: "1"
+    #cores: 1
     memory: 512m
     #serviceAccount: airflow-new-worker
     labels:
       version: 3.5.5
   executor:
-
-    cores: 1
+    coreRequest: "0.2"
+    coreLimit: "1"
+    #cores: 1
     instances: 1
     memory: 512m
     labels:
