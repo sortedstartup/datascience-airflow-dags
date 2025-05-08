@@ -16,7 +16,7 @@ spec:
   driver:
     cores: 1
     memory: 512m
-    serviceAccount: spark
+    #serviceAccount: spark
     labels: {}  # Required to avoid KeyError in Airflow
   executor:
     cores: 1
