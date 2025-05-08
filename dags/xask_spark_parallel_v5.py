@@ -9,21 +9,18 @@ NUM_JOBS = int(Variable.get("NUM_SPARK_JOBS", default_var=100))
 default_args = {"start_date": days_ago(1)}
 
 with DAG(
-    dag_id="xask_spark_parallel_v4",
+    dag_id="xask_spark_parallel_v5",
     default_args=default_args,
     schedule_interval=None,
     catchup=False,
     tags=["spark", "inline"],
-) as dag:application_file="spark-pi.yaml"
+) as dag:
 
     for idx in range(NUM_JOBS):
-        job_spec = copy.deepcopy(base_spec)
-        job_spec["metadata"]["name"] = f"spark-pi-{idx}"
-
         SparkKubernetesOperator(
             task_id=f"spark_job_{idx}",
             namespace="default",
-            application_file="spark-pi.yaml"
+            application_file="spark-pi.yaml",  # <- comma added here
             kubernetes_conn_id="kubernetes_default",
             do_xcom_push=False,
         )
