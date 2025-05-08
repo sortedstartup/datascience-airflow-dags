@@ -11,7 +11,7 @@ spec:
   mainClass: org.apache.spark.examples.SparkPi
   mainApplicationFile: local:///opt/spark/examples/jars/spark-examples.jar
   arguments:
-  - "5000"
+  - "2000"
   sparkVersion: 3.5.5
   restartPolicy:
     type: Never
@@ -22,8 +22,9 @@ spec:
     labels:
       version: 3.5.5
   executor:
+
     cores: 1
-    instances: 2
+    instances: 1
     memory: 512m
     labels:
       version: 3.5.5

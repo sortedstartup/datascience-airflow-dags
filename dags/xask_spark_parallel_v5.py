@@ -23,4 +23,5 @@ with DAG(
             application_file="spark-pi.yaml",  # <- comma added here
             kubernetes_conn_id="kubernetes_default",
             do_xcom_push=False,
+            pool="spark_pool",
         )
